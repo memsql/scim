@@ -2,8 +2,8 @@ package patch
 
 import (
 	"fmt"
-	f "github.com/elimity-com/scim/internal/filter"
-	"github.com/elimity-com/scim/schema"
+	f "github.com/memsql/scim/internal/filter"
+	"github.com/memsql/scim/schema"
 )
 
 // validateUpdate validates the add/replace operation contained within the validator based on on Section 3.5.2.1 in

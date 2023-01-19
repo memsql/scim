@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/elimity-com/scim/errors"
-	"github.com/elimity-com/scim/internal/patch"
-	"github.com/elimity-com/scim/optional"
-	"github.com/elimity-com/scim/schema"
+	"github.com/memsql/scim/errors"
+	"github.com/memsql/scim/internal/patch"
+	"github.com/memsql/scim/optional"
+	"github.com/memsql/scim/schema"
 )
 
 // unmarshal unifies the unmarshal of the requests.

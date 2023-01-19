@@ -1,8 +1,8 @@
 package patch
 
 import (
-	"github.com/elimity-com/scim/optional"
-	"github.com/elimity-com/scim/schema"
+	"github.com/memsql/scim/optional"
+	"github.com/memsql/scim/schema"
 )
 
 var (

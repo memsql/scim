@@ -1,10 +1,10 @@
 ![scim-logo](LOGO.png)
 
-[![GoVersion](https://img.shields.io/github/go-mod/go-version/elimity-com/scim.svg)](https://github.com/elimity-com/scim)
-[![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/elimity-com/scim)
+[![GoVersion](https://img.shields.io/github/go-mod/go-version/elimity-com/scim.svg)](https://github.com/memsql/scim)
+[![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/memsql/scim)
 
 
-[![Tag](https://img.shields.io/github/tag/elimity-com/scim.svg)](https://gitHub.com/elimity-com/scim/releases)
+[![Tag](https://img.shields.io/github/tag/elimity-com/scim.svg)](https://github.com/memsql/scim/releases)
 
 This is an open source implementation of the [SCIM v2.0](http://www.simplecloud.info/#Specification) specification for use in Golang.
 SCIM defines a flexible schema mechanism and REST API for managing identity data.
@@ -22,7 +22,7 @@ Other optional features such as sorting, bulk, etc. are **not** supported in thi
 ## Installation
 Assuming you already have a (recent) version of Go installed, you can get the code with go get:
 ```bash
-$ go get github.com/elimity-com/scim
+$ go get github.com/memsql/scim
 ```
 
 ## Usage
@@ -116,7 +116,7 @@ Below are some things listed that we expect that the implementation covers.
 
 We want to keep this list as short as possible. 
 If you have ideas how we could enforce these rules in the server itself do not hesitate to open
-[an issue](https://github.com/elimity-com/scim/issues/new) or a PR.
+[an issue](https://github.com/memsql/scim/issues/new) or a PR.
 ### Mutability
 #### Immutable Attributes
 *PUT Handler*: If one or more values are already set for the attribute, the input value(s) MUST match.
@@ -125,7 +125,7 @@ If you have ideas how we could enforce these rules in the server itself do not h
 Note: These attributes usually also has a returned setting of "never".
 
 ## Contributing
-[![Contributors](https://img.shields.io/github/contributors/elimity-com/scim.svg)](https://gitHub.com/elimity-com/scim/contributors/)
+[![Contributors](https://img.shields.io/github/contributors/elimity-com/scim.svg)](https://github.com/memsql/scim/contributors/)
 
 We are happy to review pull requests,
 but please first discuss the change you wish to make via issue, email,

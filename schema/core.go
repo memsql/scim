@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	datetime "github.com/di-wu/xsd-datetime"
-	"github.com/elimity-com/scim/errors"
-	"github.com/elimity-com/scim/optional"
+	"github.com/memsql/scim/errors"
+	"github.com/memsql/scim/optional"
 )
 
 // CoreAttribute represents those attributes that sit at the top level of the JSON object together with the common

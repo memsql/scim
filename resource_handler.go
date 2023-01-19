@@ -6,8 +6,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/elimity-com/scim/optional"
-	"github.com/elimity-com/scim/schema"
+	"github.com/memsql/scim/optional"
+	"github.com/memsql/scim/schema"
 	"github.com/scim2/filter-parser/v2"
 )
 

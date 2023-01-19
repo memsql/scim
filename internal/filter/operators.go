@@ -3,7 +3,7 @@ package filter
 import (
 	"fmt"
 	datetime "github.com/di-wu/xsd-datetime"
-	"github.com/elimity-com/scim/schema"
+	"github.com/memsql/scim/schema"
 	"github.com/scim2/filter-parser/v2"
 )
 

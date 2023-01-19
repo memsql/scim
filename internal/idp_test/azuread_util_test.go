@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/elimity-com/scim"
-	"github.com/elimity-com/scim/errors"
-	"github.com/elimity-com/scim/optional"
-	"github.com/elimity-com/scim/schema"
+	"github.com/memsql/scim"
+	"github.com/memsql/scim/errors"
+	"github.com/memsql/scim/optional"
+	"github.com/memsql/scim/schema"
 	"github.com/scim2/filter-parser/v2"
 )
 

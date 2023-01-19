@@ -1,7 +1,7 @@
 package scim
 
 import (
-	"github.com/elimity-com/scim/optional"
+	"github.com/memsql/scim/optional"
 )
 
 // AuthenticationScheme specifies a supported authentication scheme property.

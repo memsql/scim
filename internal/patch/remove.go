@@ -1,9 +1,9 @@
 package patch
 
 import (
-	"github.com/elimity-com/scim/errors"
-	f "github.com/elimity-com/scim/internal/filter"
-	"github.com/elimity-com/scim/schema"
+	"github.com/memsql/scim/errors"
+	f "github.com/memsql/scim/internal/filter"
+	"github.com/memsql/scim/schema"
 	"net/http"
 )
 

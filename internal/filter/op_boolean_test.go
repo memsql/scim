@@ -2,8 +2,8 @@ package filter_test
 
 import (
 	"fmt"
-	internal "github.com/elimity-com/scim/internal/filter"
-	"github.com/elimity-com/scim/schema"
+	internal "github.com/memsql/scim/internal/filter"
+	"github.com/memsql/scim/schema"
 	"github.com/scim2/filter-parser/v2"
 	"testing"
 )
