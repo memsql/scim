@@ -3,7 +3,7 @@ package filter
 import (
 	"fmt"
 	"github.com/elimity-com/scim/schema"
-	"github.com/scim2/filter-parser/v2"
+	fp "github.com/scim2/filter-parser/v2"
 	"strings"
 )
 
@@ -32,44 +32,44 @@ func cmpBoolStr(ref bool, cmp func(v, ref string) error) (func(interface{}) erro
 //
 // Expects a boolean attribute. Will panic on unknown filter operator.
 // Known operators: eq, ne, co, sw, ew, gt, lt, ge and le.
-func cmpBoolean(e *filter.AttributeExpression, attr schema.CoreAttribute, ref bool) (func(interface{}) error, error) {
+func cmpBoolean(e *fp.AttributeExpression, attr schema.CoreAttribute, ref bool) (func(interface{}) error, error) {
 	switch op := e.Operator; op {
-	case filter.EQ:
+	case fp.EQ:
 		return cmpBool(ref, func(v, ref bool) error {
 			if v != ref {
 				return fmt.Errorf("%t is not equal to %t", v, ref)
 			}
 			return nil
 		}), nil
-	case filter.NE:
+	case fp.NE:
 		return cmpBool(ref, func(v, ref bool) error {
 			if v == ref {
 				return fmt.Errorf("%t is equal to %t", v, ref)
 			}
 			return nil
 		}), nil
-	case filter.CO:
+	case fp.CO:
 		return cmpBoolStr(ref, func(v, ref string) error {
 			if !strings.Contains(v, ref) {
 				return fmt.Errorf("%s does not contain %s", v, ref)
 			}
 			return nil
 		})
-	case filter.SW:
+	case fp.SW:
 		return cmpBoolStr(ref, func(v, ref string) error {
 			if !strings.HasPrefix(v, ref) {
 				return fmt.Errorf("%s does not start with %s", v, ref)
 			}
 			return nil
 		})
-	case filter.EW:
+	case fp.EW:
 		return cmpBoolStr(ref, func(v, ref string) error {
 			if !strings.HasSuffix(v, ref) {
 				return fmt.Errorf("%s does not end with %s", v, ref)
 			}
 			return nil
 		})
-	case filter.GT, filter.LT, filter.GE, filter.LE:
+	case fp.GT, fp.LT, fp.GE, fp.LE:
 		return nil, fmt.Errorf("can not use op %q on boolean values", op)
 	default:
 		panic(fmt.Sprintf("unknown operator in expression: %s", e))

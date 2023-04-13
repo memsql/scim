@@ -2,7 +2,7 @@ package filter
 
 import (
 	"github.com/elimity-com/scim/schema"
-	"github.com/scim2/filter-parser/v2"
+	fp "github.com/scim2/filter-parser/v2"
 )
 
 // MultiValuedFilterAttributes returns the attributes of the given attribute on which can be filtered. In the case of a
@@ -46,14 +46,14 @@ func getSimpleParams(attr schema.CoreAttribute) schema.SimpleParams {
 
 // PathValidator represents a path validator.
 type PathValidator struct {
-	path       filter.Path
+	path       fp.Path
 	schema     schema.Schema
 	extensions []schema.Schema
 }
 
 // NewPathValidator constructs a new path validator.
 func NewPathValidator(pathFilter string, s schema.Schema, exts ...schema.Schema) (PathValidator, error) {
-	f, err := filter.ParsePath([]byte(pathFilter))
+	f, err := fp.ParsePath([]byte(pathFilter))
 	if err != nil {
 		return PathValidator{}, err
 	}
@@ -64,7 +64,7 @@ func NewPathValidator(pathFilter string, s schema.Schema, exts ...schema.Schema)
 	}, nil
 }
 
-func (v PathValidator) Path() filter.Path {
+func (v PathValidator) Path() fp.Path {
 	return v.path
 }
 

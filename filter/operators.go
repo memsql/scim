@@ -4,12 +4,12 @@ import (
 	"fmt"
 	datetime "github.com/di-wu/xsd-datetime"
 	"github.com/elimity-com/scim/schema"
-	"github.com/scim2/filter-parser/v2"
+	fp "github.com/scim2/filter-parser/v2"
 )
 
 // createCompareFunction returns a compare function based on the attribute expression and attribute.
 // e.g. `userName eq "john"` will return a string comparator that checks whether the passed value is equal to "john".
-func createCompareFunction(e *filter.AttributeExpression, attr schema.CoreAttribute) (func(interface{}) error, error) {
+func createCompareFunction(e *fp.AttributeExpression, attr schema.CoreAttribute) (func(interface{}) error, error) {
 	switch typ := attr.AttributeType(); typ {
 	case "binary":
 		ref, ok := e.CompareValue.(string)
