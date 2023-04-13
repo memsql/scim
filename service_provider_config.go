@@ -40,7 +40,8 @@ const (
 // ServiceProviderConfig enables a service provider to discover SCIM specification features in a standardized form as
 // well as provide additional implementation details to clients.
 type ServiceProviderConfig struct {
-	// PathPrefix is the prefix in the SCIM API URL used to trim the request path in ServeHTTP
+	// PathPrefix is the relative URL path from the server root to where this SCIM service
+	// answers queries. It is trimmed from paths inside ServeHTTP
 	PathPrefix string
 	// DocumentationURI is an HTTP-addressable URL pointing to the service provider's human-consumable help
 	// documentation.
