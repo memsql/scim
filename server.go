@@ -2,12 +2,15 @@ package scim
 
 import (
 	"fmt"
+
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"strconv"
 	"strings"
 
 	f "github.com/elimity-com/scim/filter"
+	// "github.com/goccy/go-json"
 	"github.com/scim2/filter-parser/v2"
 
 	"github.com/elimity-com/scim/errors"
@@ -64,9 +67,16 @@ type Server struct {
 // ServeHTTP dispatches the request to the handler whose pattern most closely matches the request URL.
 func (s Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/scim+json")
+	fmt.Printf("[Request]------------------\n")
+
+	requestDump, err := httputil.DumpRequest(r, true)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(string(requestDump))
 
 	path := strings.TrimPrefix(r.URL.Path, s.Config.PathPrefix)
-
+	// path := strings.TrimPrefix(r.URL.Path, "/v2")
 	switch {
 	case path == "/Me":
 		errorHandler(w, r, &errors.ScimError{

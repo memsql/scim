@@ -2,6 +2,7 @@ package scim
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -46,12 +47,13 @@ func (s Server) resourceGetHandler(w http.ResponseWriter, r *http.Request, id st
 		return
 	}
 
-	raw, err := json.Marshal(resource.response(resourceType))
+	raw, err := json.MarshalIndent(resource.response(resourceType), "", "\t")
 	if err != nil {
 		errorHandler(w, r, &errors.ScimErrorInternal)
 		log.Fatalf("failed marshaling resource: %v", err)
 		return
 	}
+	fmt.Printf("[GetResponse] %s\n", string(raw))
 
 	if resource.Meta.Version != "" {
 		w.Header().Set("Etag", resource.Meta.Version)
@@ -116,17 +118,20 @@ func (s Server) resourcePostHandler(w http.ResponseWriter, r *http.Request, reso
 
 	resource, postErr := resourceType.Handler.Create(r, attributes)
 	if postErr != nil {
+		fmt.Printf("[SCIM Create] error:(%+v)\n", postErr)
 		scimErr := errors.CheckScimError(postErr, http.MethodPost)
 		errorHandler(w, r, &scimErr)
 		return
 	}
 
-	raw, err := json.Marshal(resource.response(resourceType))
+	raw, err := json.MarshalIndent(resource.response(resourceType), "", "\t")
 	if err != nil {
 		errorHandler(w, r, &errors.ScimErrorInternal)
-		log.Fatalf("failed marshaling resource: %v", err)
+		log.Fatalf("failed marshaling resource: %v\n", err)
 		return
 	}
+
+	fmt.Printf("[PutResponse] %s\n", string(raw))
 
 	if resource.Meta.Version != "" {
 		w.Header().Set("Etag", resource.Meta.Version)
@@ -242,7 +247,9 @@ func (s Server) resourceTypesHandler(w http.ResponseWriter, r *http.Request) {
 // resourcesGetHandler receives an HTTP GET request to the resource endpoint, e.g., "/Users" or "/Groups", to retrieve
 // all known resources.
 func (s Server) resourcesGetHandler(w http.ResponseWriter, r *http.Request, resourceType ResourceType) {
+	// fmt.Printf("received request:(%+v)\n", r)
 	params, paramsErr := s.parseRequestParams(r, resourceType.Schema, resourceType.getSchemaExtensions()...)
+	// fmt.Printf("received params:(%+v), error(%+v)\n", params, paramsErr)
 	if paramsErr != nil {
 		errorHandler(w, r, paramsErr)
 		return
@@ -255,18 +262,18 @@ func (s Server) resourcesGetHandler(w http.ResponseWriter, r *http.Request, reso
 		return
 	}
 
-	raw, err := json.Marshal(listResponse{
+	raw, err := json.MarshalIndent(listResponse{
 		TotalResults: page.TotalResults,
 		Resources:    page.resources(resourceType),
 		StartIndex:   params.StartIndex,
 		ItemsPerPage: params.Count,
-	})
+	}, "", "\t")
 	if err != nil {
 		errorHandler(w, r, &errors.ScimErrorInternal)
 		log.Fatalf("failed marshalling list response: %v", err)
 		return
 	}
-
+	fmt.Printf("[GetResponse] %s\n", string(raw))
 	_, err = w.Write(raw)
 	if err != nil {
 		log.Printf("failed writing response: %v", err)

@@ -303,6 +303,7 @@ func (a *CoreAttribute) getRawAttributes() map[string]interface{} {
 }
 
 func (a CoreAttribute) validate(attribute interface{}) (interface{}, *errors.ScimError) {
+	// fmt.Printf("\n attr validate(%+v), [a.require](%t), a.mutability(%+v), a.multivalued(%t)", attribute, a.required, a.mutability, a.multiValued)
 	// whether or not the attribute is required.
 	if attribute == nil {
 		if !a.required {

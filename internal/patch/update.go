@@ -2,6 +2,7 @@ package patch
 
 import (
 	"fmt"
+
 	f "github.com/elimity-com/scim/filter"
 	"github.com/elimity-com/scim/schema"
 )
@@ -38,15 +39,22 @@ func (v OperationValidator) validateUpdate() (interface{}, error) {
 		refAttr = refSubAttr
 	}
 
+	// azure scim use "" with patch replace as remove
+	if v.value == "" {
+		return nil, nil
+	}
+
 	if !refAttr.MultiValued() {
 		attr, scimErr := refAttr.ValidateSingular(v.value)
 		if scimErr != nil {
+			fmt.Printf("this is where remove got error(%+v), %T", v.value, v.value)
 			return nil, scimErr
 		}
 		return attr, nil
 	}
 
 	if list, ok := v.value.([]interface{}); ok {
+		// fmt.Printf("update validate v.value (%+v) type(%T)", v.value, v.value)
 		var attrs []interface{}
 		for _, value := range list {
 			attr, scimErr := refAttr.ValidateSingular(value)

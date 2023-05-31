@@ -2,6 +2,7 @@ package schema
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 
 	"github.com/elimity-com/scim/errors"
@@ -132,7 +133,8 @@ func (s Schema) validate(resource interface{}, checkMutability bool) (map[string
 	if !ok {
 		return nil, &errors.ScimErrorInvalidSyntax
 	}
-
+	// fmt.Printf("\nvalidate core: %+v", core)
+	// fmt.Printf("\nvalidate attribute: %+v", s.Attributes)
 	attributes := make(map[string]interface{})
 	for _, attribute := range s.Attributes {
 		var hit interface{}
@@ -155,12 +157,15 @@ func (s Schema) validate(resource interface{}, checkMutability bool) (map[string
 		}
 
 		attr, scimErr := attribute.validate(hit)
+		// fmt.Printf("\n validate attribute(%s) found(%t) attr(%+v)[%+v] hit(%+v)", attribute.name, found, attr, scimErr, hit)
 		if scimErr != nil {
 			return nil, scimErr
 		}
+		//fmt.Printf("\n validate attribute(%s) found(%t) attr(%+v) hit(%+v)", attribute.name, found, attr, hit)
 		if attr != nil {
 			attributes[attribute.name] = attr
 		}
 	}
+	fmt.Printf("result attribute: %+v", attributes)
 	return attributes, nil
 }

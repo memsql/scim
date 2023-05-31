@@ -3,6 +3,8 @@ package scim
 import (
 	"bytes"
 	"encoding/json"
+
+	// "fmt"
 	"net/http"
 
 	"github.com/elimity-com/scim/errors"
@@ -88,9 +90,11 @@ func (t ResourceType) schemaWithCommon() schema.Schema {
 
 func (t ResourceType) validate(raw []byte) (ResourceAttributes, *errors.ScimError) {
 	var m map[string]interface{}
+	// fmt.Printf("\nbefore unmarshal body: %s", string(raw))
 	if err := unmarshal(raw, &m); err != nil {
 		return ResourceAttributes{}, &errors.ScimErrorInvalidSyntax
 	}
+	// fmt.Printf("\nafter unmarshal body: %+v", m)
 
 	attributes, scimErr := t.schemaWithCommon().Validate(m)
 	if scimErr != nil {

@@ -2,6 +2,7 @@ package filter
 
 import (
 	"fmt"
+
 	"github.com/elimity-com/scim/schema"
 	"github.com/scim2/filter-parser/v2"
 )
@@ -118,17 +119,21 @@ func (v Validator) GetFilter() filter.Expression {
 
 // PassesFilter checks whether given resources passes the filter.
 func (v Validator) PassesFilter(resource map[string]interface{}) error {
+	// fmt.Printf("[sqsq] passFilter resource (%+v)\n", resource)
 	switch e := v.filter.(type) {
 	case *filter.ValuePath:
-		ref, attr, ok := v.referenceContains(e.AttributePath)
+		// fmt.Printf("[sqsq] value (%+v), path(%+v)", v.filter, e.AttributePath)
+		// fmt.Printf("[sqsq] passFilter filter valuePath (%+v)%+v\n", e.AttributePath, e.ValueFilter)
+		ref, attr, ok := v.ReferenceContains(e.AttributePath)
 		if !ok {
 			return fmt.Errorf("could not find an attribute that matches the attribute path: %s", e.AttributePath)
 		}
 		if !attr.MultiValued() {
 			return fmt.Errorf("value path filters can only be applied to multi-valued attributes")
 		}
-
+		// fmt.Printf("[sqsq] passFilter filter attr(%+v), ref(%+v)\n", attr, ref)
 		value, ok := resource[attr.Name()]
+		// fmt.Printf("[sqsq] passFilter filter attrvalue (%+v)%t%T\n", value, ok, value)
 		if !ok {
 			// Also try with the id as prefix.
 			value, ok = resource[fmt.Sprintf("%s:%s", ref.ID, attr.Name())]
@@ -144,21 +149,25 @@ func (v Validator) PassesFilter(resource map[string]interface{}) error {
 			},
 		}
 		switch value := value.(type) {
-		case []interface{}:
-			for _, a := range value {
-				attr, ok := a.(map[string]interface{})
-				if !ok {
-					return fmt.Errorf("the target is not a complex attribute")
-				}
-				if err := valueFilter.PassesFilter(attr); err == nil {
+		case []map[string]interface{}:
+			fmt.Printf("\nis array(%+v)\n", value)
+			for _, attr := range value {
+				// attr, ok := a.(map[string]interface{})
+				// if !ok {
+				// 	return fmt.Errorf("the target is not a complex attribute")
+				// }
+				err := valueFilter.PassesFilter(attr)
+				if err == nil {
 					// Found an attribute that passed the value filter.
 					return nil
 				}
+				// fmt.Printf("[sqsq] passFilter filter: (%+v)\n", err)
 			}
 		}
 		return fmt.Errorf("the resource does not pass the filter")
 	case *filter.AttributeExpression:
-		ref, attr, ok := v.referenceContains(e.AttributePath)
+		// fmt.Printf("[sqsq] passFilter attr filter(%+v), valuePath (%+v)\n", v.filter, e)
+		ref, attr, ok := v.ReferenceContains(e.AttributePath)
 		if !ok {
 			return fmt.Errorf("could not find an attribute that matches the attribute path: %s", e.AttributePath)
 		}
@@ -295,9 +304,10 @@ func (v Validator) Validate() error {
 	return err
 }
 
-// referenceContains returns the schema and attribute to which the attribute path applies.
-func (v Validator) referenceContains(attrPath filter.AttributePath) (schema.Schema, schema.CoreAttribute, bool) {
+// ReferenceContains returns the schema and attribute to which the attribute path applies.
+func (v Validator) ReferenceContains(attrPath filter.AttributePath) (schema.Schema, schema.CoreAttribute, bool) {
 	for _, s := range append([]schema.Schema{v.schema}, v.extensions...) {
+		// fmt.Printf("[sqsq check contains] schema(%+v), attrpath(%+v)\n", s.Name, attrPath)
 		if uri := attrPath.URI(); uri != "" && s.ID != uri {
 			continue
 		}
