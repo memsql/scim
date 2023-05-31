@@ -2,6 +2,7 @@ package patch
 
 import (
 	"fmt"
+
 	f "github.com/elimity-com/scim/filter"
 	"github.com/elimity-com/scim/schema"
 )
@@ -36,6 +37,11 @@ func (v OperationValidator) validateUpdate() (interface{}, error) {
 			return nil, err
 		}
 		refAttr = refSubAttr
+	}
+
+	// azure scim use "" with patch replace as remove
+	if v.value == "" {
+		return nil, nil
 	}
 
 	if !refAttr.MultiValued() {

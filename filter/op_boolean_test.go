@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/elimity-com/scim/filter"
-
 	"github.com/elimity-com/scim/schema"
 	fp "github.com/scim2/filter-parser/v2"
 )

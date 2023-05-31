@@ -3,6 +3,7 @@ package scim
 import (
 	"bytes"
 	"encoding/json"
+
 	"net/http"
 
 	"github.com/elimity-com/scim/errors"
