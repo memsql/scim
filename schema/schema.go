@@ -132,7 +132,6 @@ func (s Schema) validate(resource interface{}, checkMutability bool) (map[string
 	if !ok {
 		return nil, &errors.ScimErrorInvalidSyntax
 	}
-
 	attributes := make(map[string]interface{})
 	for _, attribute := range s.Attributes {
 		var hit interface{}

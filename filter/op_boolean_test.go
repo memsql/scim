@@ -2,15 +2,16 @@ package filter_test
 
 import (
 	"fmt"
-	internal "github.com/elimity-com/scim/internal/filter"
-	"github.com/elimity-com/scim/schema"
-	"github.com/scim2/filter-parser/v2"
 	"testing"
+
+	"github.com/elimity-com/scim/filter"
+	"github.com/elimity-com/scim/schema"
+	fp "github.com/scim2/filter-parser/v2"
 )
 
 func TestValidatorBoolean(t *testing.T) {
 	var (
-		exp = func(op filter.CompareOperator) string {
+		exp = func(op fp.CompareOperator) string {
 			return fmt.Sprintf("bool %s true", op)
 		}
 		ref = schema.Schema{
@@ -26,22 +27,22 @@ func TestValidatorBoolean(t *testing.T) {
 	)
 
 	for _, test := range []struct {
-		op    filter.CompareOperator
+		op    fp.CompareOperator
 		valid bool // Whether the filter is valid.
 	}{
-		{filter.EQ, true},
-		{filter.NE, false},
-		{filter.CO, true},
-		{filter.SW, true},
-		{filter.EW, true},
-		{filter.GT, false},
-		{filter.LT, false},
-		{filter.GE, false},
-		{filter.LE, false},
+		{fp.EQ, true},
+		{fp.NE, false},
+		{fp.CO, true},
+		{fp.SW, true},
+		{fp.EW, true},
+		{fp.GT, false},
+		{fp.LT, false},
+		{fp.GE, false},
+		{fp.LE, false},
 	} {
 		t.Run(string(test.op), func(t *testing.T) {
 			f := exp(test.op)
-			validator, err := internal.NewValidator(f, ref)
+			validator, err := filter.NewValidator(f, ref)
 			if err != nil {
 				t.Fatal(err)
 			}

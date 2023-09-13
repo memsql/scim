@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/elimity-com/scim/errors"
-	f "github.com/elimity-com/scim/internal/filter"
+	f "github.com/elimity-com/scim/filter"
 	"github.com/elimity-com/scim/schema"
 )
 

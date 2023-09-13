@@ -344,7 +344,6 @@ func (a CoreAttribute) validate(attribute interface{}) (interface{}, *errors.Sci
 			}
 		}
 		return validMap, nil
-
 	case []interface{}:
 		// return false if the multivalued attribute is empty.
 		if a.required && len(arr) == 0 {

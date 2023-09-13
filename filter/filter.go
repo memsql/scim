@@ -2,6 +2,7 @@ package filter
 
 import (
 	"fmt"
+
 	"github.com/elimity-com/scim/schema"
 	"github.com/scim2/filter-parser/v2"
 )
@@ -120,14 +121,13 @@ func (v Validator) GetFilter() filter.Expression {
 func (v Validator) PassesFilter(resource map[string]interface{}) error {
 	switch e := v.filter.(type) {
 	case *filter.ValuePath:
-		ref, attr, ok := v.referenceContains(e.AttributePath)
+		ref, attr, ok := v.ReferenceContains(e.AttributePath)
 		if !ok {
 			return fmt.Errorf("could not find an attribute that matches the attribute path: %s", e.AttributePath)
 		}
 		if !attr.MultiValued() {
 			return fmt.Errorf("value path filters can only be applied to multi-valued attributes")
 		}
-
 		value, ok := resource[attr.Name()]
 		if !ok {
 			// Also try with the id as prefix.
@@ -144,13 +144,10 @@ func (v Validator) PassesFilter(resource map[string]interface{}) error {
 			},
 		}
 		switch value := value.(type) {
-		case []interface{}:
-			for _, a := range value {
-				attr, ok := a.(map[string]interface{})
-				if !ok {
-					return fmt.Errorf("the target is not a complex attribute")
-				}
-				if err := valueFilter.PassesFilter(attr); err == nil {
+		case []map[string]interface{}: // change from []interface{}
+			for _, attr := range value {
+				err := valueFilter.PassesFilter(attr)
+				if err == nil {
 					// Found an attribute that passed the value filter.
 					return nil
 				}
@@ -158,7 +155,7 @@ func (v Validator) PassesFilter(resource map[string]interface{}) error {
 		}
 		return fmt.Errorf("the resource does not pass the filter")
 	case *filter.AttributeExpression:
-		ref, attr, ok := v.referenceContains(e.AttributePath)
+		ref, attr, ok := v.ReferenceContains(e.AttributePath)
 		if !ok {
 			return fmt.Errorf("could not find an attribute that matches the attribute path: %s", e.AttributePath)
 		}
@@ -295,8 +292,8 @@ func (v Validator) Validate() error {
 	return err
 }
 
-// referenceContains returns the schema and attribute to which the attribute path applies.
-func (v Validator) referenceContains(attrPath filter.AttributePath) (schema.Schema, schema.CoreAttribute, bool) {
+// ReferenceContains returns the schema and attribute to which the attribute path applies.
+func (v Validator) ReferenceContains(attrPath filter.AttributePath) (schema.Schema, schema.CoreAttribute, bool) {
 	for _, s := range append([]schema.Schema{v.schema}, v.extensions...) {
 		if uri := attrPath.URI(); uri != "" && s.ID != uri {
 			continue

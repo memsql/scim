@@ -2,13 +2,16 @@ package scim
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/elimity-com/scim/errors"
-	f "github.com/elimity-com/scim/internal/filter"
+	f "github.com/elimity-com/scim/filter"
 	"github.com/elimity-com/scim/schema"
 )
+
+const handlerDebug = true
 
 func errorHandler(w http.ResponseWriter, _ *http.Request, scimErr *errors.ScimError) {
 	raw, err := json.Marshal(scimErr)
@@ -46,11 +49,14 @@ func (s Server) resourceGetHandler(w http.ResponseWriter, r *http.Request, id st
 		return
 	}
 
-	raw, err := json.Marshal(resource.response(resourceType))
+	raw, err := json.MarshalIndent(resource.response(resourceType), "", "\t")
 	if err != nil {
 		errorHandler(w, r, &errors.ScimErrorInternal)
 		log.Fatalf("failed marshaling resource: %v", err)
 		return
+	}
+	if handlerDebug {
+		fmt.Printf("[GetResponse] %s\n", string(raw))
 	}
 
 	if resource.Meta.Version != "" {
@@ -116,16 +122,24 @@ func (s Server) resourcePostHandler(w http.ResponseWriter, r *http.Request, reso
 
 	resource, postErr := resourceType.Handler.Create(r, attributes)
 	if postErr != nil {
+		if handlerDebug {
+			fmt.Printf("[SCIM Create] error:(%+v)\n", postErr)
+		}
+
 		scimErr := errors.CheckScimError(postErr, http.MethodPost)
 		errorHandler(w, r, &scimErr)
 		return
 	}
 
-	raw, err := json.Marshal(resource.response(resourceType))
+	raw, err := json.MarshalIndent(resource.response(resourceType), "", "\t")
 	if err != nil {
 		errorHandler(w, r, &errors.ScimErrorInternal)
-		log.Fatalf("failed marshaling resource: %v", err)
+		log.Fatalf("failed marshaling resource: %v\n", err)
 		return
+	}
+
+	if handlerDebug {
+		fmt.Printf("[PutResponse] %s\n", string(raw))
 	}
 
 	if resource.Meta.Version != "" {
@@ -255,16 +269,19 @@ func (s Server) resourcesGetHandler(w http.ResponseWriter, r *http.Request, reso
 		return
 	}
 
-	raw, err := json.Marshal(listResponse{
+	raw, err := json.MarshalIndent(listResponse{
 		TotalResults: page.TotalResults,
 		Resources:    page.resources(resourceType),
 		StartIndex:   params.StartIndex,
 		ItemsPerPage: params.Count,
-	})
+	}, "", "\t")
 	if err != nil {
 		errorHandler(w, r, &errors.ScimErrorInternal)
 		log.Fatalf("failed marshalling list response: %v", err)
 		return
+	}
+	if handlerDebug {
+		fmt.Printf("[GetResponse] %s\n", string(raw))
 	}
 
 	_, err = w.Write(raw)

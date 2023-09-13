@@ -1,7 +1,7 @@
 package filter_test
 
 import (
-	internal "github.com/elimity-com/scim/internal/filter"
+	"github.com/elimity-com/scim/filter"
 	"github.com/elimity-com/scim/schema"
 	"testing"
 )
@@ -93,7 +93,7 @@ func TestValidatorInvalidResourceTypes(t *testing.T) {
 		},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			validator, err := internal.NewValidator(test.filter, schema.Schema{
+			validator, err := filter.NewValidator(test.filter, schema.Schema{
 				Attributes: []schema.CoreAttribute{test.attr},
 			})
 			if err != nil {
